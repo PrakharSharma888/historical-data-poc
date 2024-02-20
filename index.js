@@ -14,7 +14,7 @@ const getBalance = async (address, blockNumber) => {
 const getDateToBlock = async (timestampSeconds) => {
   const date = new Date(timestampSeconds * 1000);
   const isoDateString = date.toISOString();
-
+  // console.log(isoDateString)
   await Moralis.start({
     apiKey: "VCRkegcv2gqtsdRMoNma3tssY7q7pj5Twjv7J2WtTbPRXGIRiZfCUs7SCgBOF4P7",
   });
@@ -27,16 +27,27 @@ const getDateToBlock = async (timestampSeconds) => {
   return response.raw;
 };
 
-const main = async (timestampSeconds) => {
+const toTimestamp = (strDate) => {
+  const dt = new Date(strDate).getTime();
+  return dt / 1000;
+}
+
+const main = async (stringDateTime) => {
+  const timestampSeconds2 = toTimestamp(stringDateTime)
+  // console.log(timestampSeconds2)
+
+  const date = new Date(timestampSeconds2 * 1000);
+  const isoDateString = date.toISOString();
+  // console.log("New one",isoDateString)
+
   const address = "0x8F0dfab18abE9241507C4d8746479cB9A2C966FA";
-  const blockNumber = 10546677;
-
-  const balance = await getBalance(address, blockNumber);
-  console.log(`Balance of ${address} at block ${blockNumber}: ${balance} ETH`);
-
-  const blockData = await getDateToBlock(timestampSeconds);
-  // console.log(`Block data for timestamp ${timestampSeconds}:`, blockData);
+  const blockNumber = await getDateToBlock(timestampSeconds);
+  // console.log(blockNumber.block)
+  const balance = await getBalance(address, blockNumber.block);
+  console.log(`Balance of ${address} at block ${blockNumber.block}: ${balance} ETH`);
 };
 
+
+
 const timestampSeconds = 1708085710;
-main(timestampSeconds);
+main('02/16/2024 12:15:10');
